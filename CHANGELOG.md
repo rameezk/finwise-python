@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.2.1 (2026-01-08)
+
+### Bug Fixes
+
+- Remove redundant release step from workflow
+  ([`8615582`](https://github.com/rameezk/finwise-python/commit/8615582c62fe1304b8bb546cefa5b6ff49aaa63c))
+
+
 ## v0.2.0 (2026-01-08)
 
 
