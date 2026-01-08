@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v1.1.2 (2026-01-08)
+
+### Bug Fixes
+
+- Package should match pypi project
+  ([`e728290`](https://github.com/rameezk/finwise-python/commit/e72829044770e33094f344ff4b41575d41459808))
+
+### Documentation
+
+- Update readme
+  ([`c70346f`](https://github.com/rameezk/finwise-python/commit/c70346f70a98a97ab385340149acba7cf0580d3d))
+
+
 ## v1.1.1 (2026-01-08)
 
 ### Bug Fixes
