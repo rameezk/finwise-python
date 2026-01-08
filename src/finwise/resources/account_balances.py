@@ -157,7 +157,9 @@ class AccountBalancesResource(BaseResource):
         if currency:
             params["currency"] = currency
 
-        response = self._transport.get(f"{self._path}/aggregated", params=params or None)
+        response = self._transport.get(
+            f"{self._path}/aggregated", params=params or None
+        )
 
         return AggregatedBalance.model_validate(response)
 

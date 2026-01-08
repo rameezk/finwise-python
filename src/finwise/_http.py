@@ -163,9 +163,7 @@ class HTTPTransport:
             raise last_exception
         raise RuntimeError("Unexpected state in request retry loop")
 
-    def get(
-        self, path: str, *, params: Optional[dict[str, Any]] = None
-    ) -> Any:
+    def get(self, path: str, *, params: Optional[dict[str, Any]] = None) -> Any:
         """Make a GET request."""
         return self.request("GET", path, params=params)
 
@@ -189,9 +187,7 @@ class HTTPTransport:
         """Make a PATCH request."""
         return self.request("PATCH", path, json=json, params=params)
 
-    def delete(
-        self, path: str, *, params: Optional[dict[str, Any]] = None
-    ) -> Any:
+    def delete(self, path: str, *, params: Optional[dict[str, Any]] = None) -> Any:
         """Make a DELETE request."""
         return self.request("DELETE", path, params=params)
 

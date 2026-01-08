@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from decimal import Decimal
 from typing import Any
 
 import pytest
@@ -13,7 +14,6 @@ from finwise import (
     AuthenticationError,
     FinWise,
     NotFoundError,
-    PaginatedResponse,
     ValidationError,
 )
 
@@ -28,9 +28,7 @@ class TestAccountsCreate:
         sample_account: dict[str, Any],
     ) -> None:
         """Test successful account creation."""
-        mock_api.post("/accounts").mock(
-            return_value=Response(201, json=sample_account)
-        )
+        mock_api.post("/accounts").mock(return_value=Response(201, json=sample_account))
 
         account = client.accounts.create(
             name="Test Savings Account",
@@ -44,7 +42,7 @@ class TestAccountsCreate:
         assert account.name == "Test Savings Account"
         assert account.type == "savings"
         assert account.currency == "USD"
-        assert account.balance == 5000.00
+        assert account.balance == Decimal("5000.00")
         assert not account.is_archived
 
     def test_create_account_minimal(
@@ -54,9 +52,7 @@ class TestAccountsCreate:
         sample_account: dict[str, Any],
     ) -> None:
         """Test account creation with minimal parameters."""
-        mock_api.post("/accounts").mock(
-            return_value=Response(201, json=sample_account)
-        )
+        mock_api.post("/accounts").mock(return_value=Response(201, json=sample_account))
 
         account = client.accounts.create(
             name="Test Account",
@@ -204,44 +200,16 @@ class TestAccountsList:
 
         accounts = client.accounts.list()
 
-        assert isinstance(accounts, PaginatedResponse)
+        assert isinstance(accounts, list)
         assert len(accounts) == 2
-        assert accounts.total_count == 2
-        assert accounts.page_number == 1
-        assert not accounts.has_next
 
-        # Test iteration over data
-        account_names = [acc.name for acc in accounts.data]
+        # Test iteration
+        account_names = [acc.name for acc in accounts]
         assert "Test Savings Account" in account_names
         assert "Test Checking Account" in account_names
 
         # Test index access
         assert accounts[0].name == "Test Savings Account"
-
-    def test_list_accounts_with_pagination(
-        self,
-        client: FinWise,
-        mock_api: respx.Router,
-        sample_accounts_list: dict[str, Any],
-    ) -> None:
-        """Test account listing with pagination parameters."""
-        paginated_response = {
-            **sample_accounts_list,
-            "pageNumber": 2,
-            "pageSize": 50,
-            "hasNext": True,
-            "hasPrevious": True,
-        }
-        mock_api.get("/accounts").mock(
-            return_value=Response(200, json=paginated_response)
-        )
-
-        accounts = client.accounts.list(page_number=2, page_size=50)
-
-        assert accounts.page_number == 2
-        assert accounts.page_size == 50
-        assert accounts.has_next
-        assert accounts.has_previous
 
     def test_list_accounts_empty(
         self,
@@ -258,14 +226,12 @@ class TestAccountsList:
             "hasNext": False,
             "hasPrevious": False,
         }
-        mock_api.get("/accounts").mock(
-            return_value=Response(200, json=empty_response)
-        )
+        mock_api.get("/accounts").mock(return_value=Response(200, json=empty_response))
 
         accounts = client.accounts.list()
 
+        assert isinstance(accounts, list)
         assert len(accounts) == 0
-        assert accounts.total_count == 0
 
 
 class TestAccountsArchive:

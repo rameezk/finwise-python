@@ -43,11 +43,15 @@ def sample_account() -> dict[str, Any]:
     """Sample account response data."""
     return {
         "id": "acc_123abc",
+        "userId": "user_123",
         "name": "Test Savings Account",
         "type": "savings",
-        "currency": "USD",
+        "subType": "savings",
+        "currentBalance": {
+            "amount": "5000.00",
+            "currencyCode": "USD",
+        },
         "description": "My test savings account",
-        "balance": 5000.00,
         "createdAt": "2024-01-01T00:00:00Z",
         "updatedAt": "2024-01-15T12:30:00Z",
         "archivedAt": None,
@@ -74,7 +78,11 @@ def sample_accounts_list(sample_account: dict[str, Any]) -> dict[str, Any]:
                 "id": "acc_456def",
                 "name": "Test Checking Account",
                 "type": "checking",
-                "balance": 2500.00,
+                "subType": "checking",
+                "currentBalance": {
+                    "amount": "2500.00",
+                    "currencyCode": "USD",
+                },
             },
         ],
         "pageNumber": 1,

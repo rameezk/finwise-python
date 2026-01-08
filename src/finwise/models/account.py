@@ -111,7 +111,9 @@ class Account(BaseModel):
     user_id: str = Field(..., alias="userId", description="User ID")
     name: str = Field(..., description="Account name")
     type: AccountType = Field(..., description="Account type")
-    sub_type: AccountSubType = Field(..., alias="subType", description="Account sub-type")
+    sub_type: AccountSubType = Field(
+        ..., alias="subType", description="Account sub-type"
+    )
     current_balance: Optional[Amount] = Field(None, alias="currentBalance")
     available_balance: Optional[Amount] = Field(None, alias="availableBalance")
     created_at: datetime = Field(..., alias="createdAt")
