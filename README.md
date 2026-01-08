@@ -5,13 +5,13 @@ A simple, well-documented Python client for the [FinWise API](https://finwiseapp
 ## Installation
 
 ```bash
-pip install finwise
+pip install finwise-python
 ```
 
 For development:
 
 ```bash
-pip install finwise[dev]
+pip install finwise-python[dev]
 ```
 
 ## Quick Start
