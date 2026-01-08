@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.0.0 (2026-01-08)
+
+### Features
+
+- Use auto detection for version bumping
+  ([`96f0039`](https://github.com/rameezk/finwise-python/commit/96f0039ed82b7bb1e1f2adb2c3fcb26f2a5c7fa6))
+
+
 ## v0.2.2 (2026-01-08)
 
 ### Features
