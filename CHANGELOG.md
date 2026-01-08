@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.1.1 (2026-01-08)
+
+### Bug Fixes
+
+- Disable attestations for PyPI publish
+  ([`fda0a27`](https://github.com/rameezk/finwise-python/commit/fda0a2709d15ff933857b31572593a6bf602118c))
+
+
 ## v1.1.0 (2026-01-08)
 
 ### Features
