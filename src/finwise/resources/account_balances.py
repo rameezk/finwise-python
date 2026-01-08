@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal
 from typing import Optional
 
@@ -10,9 +10,9 @@ from finwise.models.account_balance import (
     AccountBalance,
     AccountBalanceCreateRequest,
     AggregatedBalance,
+    Amount,
 )
 from finwise.resources._base import BaseResource
-from finwise.types.pagination import PaginatedResponse
 
 
 class AccountBalancesResource(BaseResource):
@@ -47,6 +47,7 @@ class AccountBalancesResource(BaseResource):
         account_id: str,
         balance: Decimal,
         balance_date: date,
+        currency: str = "USD",
     ) -> AccountBalance:
         """
         Create a new account balance record.
@@ -58,6 +59,7 @@ class AccountBalancesResource(BaseResource):
             account_id: ID of the account this balance belongs to.
             balance: Balance amount at the snapshot time.
             balance_date: Date of the balance snapshot.
+            currency: ISO 4217 currency code (default: "USD").
 
         Returns:
             The created AccountBalance object.
@@ -78,8 +80,8 @@ class AccountBalancesResource(BaseResource):
         """
         request = AccountBalanceCreateRequest(
             account_id=account_id,
-            balance=balance,
-            balance_date=balance_date,
+            amount=Amount(amount=balance, currency_code=currency),
+            date=datetime.combine(balance_date, datetime.min.time()),
         )
 
         response = self._transport.post(

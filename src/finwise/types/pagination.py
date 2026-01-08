@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, Generic, Iterator, TypeVar
+from collections.abc import Iterator
+from typing import Any, Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict, Field
 

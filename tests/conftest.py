@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Any, Generator
+from collections.abc import Generator
+from typing import Any
 
 import pytest
 import respx
-from httpx import Response
 
 from finwise import FinWise
 
