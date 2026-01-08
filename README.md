@@ -1,6 +1,6 @@
 # FinWise Python SDK
 
-A simple, well-documented Python client for the [FinWise API](https://finwiseapp.io/docs/api).
+A simple Python client for the [FinWise API](https://finwiseapp.io/docs/api).
 
 ## Installation
 
@@ -33,9 +33,6 @@ for account in accounts.data:
 
 ## Features
 
-- Simple, intuitive API design
-- Full type hints for IDE support
-- Comprehensive error handling
 - Automatic retries with exponential backoff
 - Pagination support
 - Context manager support
@@ -352,4 +349,3 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 - [FinWise App](https://finwiseapp.io)
 - [API Documentation](https://finwiseapp.io/docs/api)
-- [GitHub Repository](https://github.com/finwise/finwise-python)
