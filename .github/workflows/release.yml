@@ -12,11 +12,6 @@ on:
           - minor
           - major
         default: 'patch'
-      create_github_release:
-        description: 'Create GitHub Release'
-        required: false
-        type: boolean
-        default: true
 
 permissions:
   contents: read
@@ -57,14 +52,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          semantic-release version --${{ inputs.bump_type }} --commit --tag --push
-
-      - name: Create GitHub Release
-        if: ${{ inputs.create_github_release }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          LATEST_TAG=$(git describe --tags --abbrev=0)
-          gh release create "$LATEST_TAG" \
-            --title "$LATEST_TAG" \
-            --generate-notes
+          semantic-release version --${{ inputs.bump_type }} --commit --tag --push --vcs-release
