@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "finwise"
+name = "finwise-python"
 version = "1.1.1"
-description = "Official Python SDK for the FinWise API"
+description = "Python SDK for the FinWise API"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
