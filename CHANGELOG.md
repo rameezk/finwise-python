@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.2.2 (2026-01-08)
+
+### Features
+
+- Run CI checks before release
+  ([`d531d5a`](https://github.com/rameezk/finwise-python/commit/d531d5a7aab0d8981329b9c497daf6389ce8760d))
+
+
 ## v0.2.1 (2026-01-08)
 
 ### Bug Fixes
