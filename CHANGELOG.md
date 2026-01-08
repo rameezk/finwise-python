@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.1.0 (2026-01-08)
+
+### Features
+
+- Publish to pypi
+  ([`36594a6`](https://github.com/rameezk/finwise-python/commit/36594a640f28efa58f38ff48ba17a35268d7ea92))
+
+
 ## v1.0.0 (2026-01-08)
 
 ### Features
