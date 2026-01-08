@@ -8,10 +8,11 @@ on:
         required: true
         type: choice
         options:
+          - auto
           - patch
           - minor
           - major
-        default: 'patch'
+        default: 'auto'
 
 permissions:
   contents: read
@@ -57,4 +58,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          semantic-release version --${{ inputs.bump_type }} --commit --tag --push --vcs-release
+          if [ "${{ inputs.bump_type }}" = "auto" ]; then
+            semantic-release version --commit --tag --push --vcs-release
+          else
+            semantic-release version --${{ inputs.bump_type }} --commit --tag --push --vcs-release
+          fi
