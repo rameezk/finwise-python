@@ -39,11 +39,16 @@ dev = [
     "mypy>=1.0.0",
     "ruff>=0.1.0",
 ]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+]
 
 [project.urls]
-Homepage = "https://finwiseapp.io"
-Documentation = "https://finwiseapp.io/docs/api"
+Homepage = "https://github.com/rameezk/finwise-python"
+Documentation = "https://rameezk.github.io/finwise-python"
 Repository = "https://github.com/rameezk/finwise-python"
+"Official API Docs" = "https://finwiseapp.io/docs/api"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/finwise"]

@@ -1,0 +1,53 @@
+site_name: FinWise Python SDK
+site_description: Unofficial Python SDK for the FinWise API
+site_url: https://rameezk.github.io/finwise-python
+repo_url: https://github.com/rameezk/finwise-python
+repo_name: rameezk/finwise-python
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+    - content.code.annotate
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - tables
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quickstart.md
+      - Configuration: getting-started/configuration.md
+  - Usage:
+      - Accounts: usage/accounts.md
+      - Transactions: usage/transactions.md
+      - Account Balances: usage/account-balances.md
+      - Transaction Categories: usage/transaction-categories.md
+  - Reference:
+      - Error Handling: reference/error-handling.md
+      - Pagination: reference/pagination.md
+      - API Reference: reference/api-reference.md
+  - Official API Docs: https://finwiseapp.io/docs/api
