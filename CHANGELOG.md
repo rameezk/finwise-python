@@ -2,6 +2,26 @@
 
 <!-- version list -->
 
+## v1.1.3 (2026-01-09)
+
+### Documentation
+
+- Add contributing.md
+  ([`900ed2f`](https://github.com/rameezk/finwise-python/commit/900ed2f25a82e6cb8d6cce75ffbfbe317e890903))
+
+- Add issue templates
+  ([`2db057e`](https://github.com/rameezk/finwise-python/commit/2db057e3100787ef70c27521fd3cbe218c084709))
+
+- Update readme
+  ([`9683d8f`](https://github.com/rameezk/finwise-python/commit/9683d8f1fc5d251a8fd5f8c530c0da4aa2e6d252))
+
+- Update readme
+  ([`380c2d9`](https://github.com/rameezk/finwise-python/commit/380c2d9624f240c67da1bd85beb50abe4b42450c))
+
+- Update readme
+  ([`cd5a86d`](https://github.com/rameezk/finwise-python/commit/cd5a86d3ec903c968447fb7b7e05a683cebddc23))
+
+
 ## v1.1.2 (2026-01-08)
 
 ### Bug Fixes
