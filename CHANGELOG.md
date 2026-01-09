@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.2.0 (2026-01-09)
+
+### Features
+
+- Make it clear that this sdk if unofficial
+  ([`f346b6a`](https://github.com/rameezk/finwise-python/commit/f346b6afd35b72d5aa0be73bb164ad3543a2d95b))
+
+
 ## v1.1.3 (2026-01-09)
 
 ### Documentation
