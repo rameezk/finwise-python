@@ -78,3 +78,7 @@ dmypy.json
 .DS_Store
 Thumbs.db
 site/
+
+# Nix
+result
+.direnv/

@@ -4,6 +4,29 @@ Thanks for your interest in contributing to finwise-python!
 
 ## Development Setup
 
+### Option 1: Using Nix (Recommended)
+
+If you have [Nix](https://nixos.org/) installed with flakes enabled:
+
+```bash
+git clone https://github.com/rameezk/finwise-python.git
+cd finwise-python
+
+# Enter development shell
+nix develop
+
+# Install package in editable mode
+pip install -e .
+```
+
+Available dev shells:
+- `nix develop` - Default (Python 3.11)
+- `nix develop .#python312` - Python 3.12
+- `nix develop .#python313` - Python 3.13
+- `nix develop .#docs` - Documentation environment
+
+### Option 2: Using virtualenv
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/rameezk/finwise-python.git
