@@ -2,6 +2,22 @@
 
 <!-- version list -->
 
+## v1.4.0 (2026-01-09)
+
+### Continuous Integration
+
+- Add flakehub action
+  ([`391da8d`](https://github.com/rameezk/finwise-python/commit/391da8d8434afbdcdcaf473eb5da0d331bf7fd92))
+
+- Consolidate workflows per python version
+  ([`7dfdbd3`](https://github.com/rameezk/finwise-python/commit/7dfdbd369298848859f9d0758af6036ab12f5de3))
+
+### Features
+
+- Add nix
+  ([`ae163a3`](https://github.com/rameezk/finwise-python/commit/ae163a34ab6269dc0e7b5f8a173400c71ab8af0d))
+
+
 ## v1.3.0 (2026-01-09)
 
 ### Continuous Integration
