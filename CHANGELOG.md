@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v1.3.0 (2026-01-09)
+
+### Continuous Integration
+
+- Add workflow for mkdocs
+  ([`0faa73d`](https://github.com/rameezk/finwise-python/commit/0faa73dde24c2c9fc58d858f5773b666d5b0ae57))
+
+### Features
+
+- Use mkdocs for usage docs
+  ([`c0426a8`](https://github.com/rameezk/finwise-python/commit/c0426a8a097d3e10ce8595b73eb40ead98815753))
+
+
 ## v1.2.0 (2026-01-09)
 
 ### Features
