@@ -9,7 +9,7 @@ on:
 
 jobs:
   lint:
-    name: Lint
+    name: Lint & Type Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,26 +29,11 @@ jobs:
       - name: Check formatting
         run: ruff format --check .
 
-  type-check:
-    name: Type Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-
-      - name: Install dependencies
-        run: pip install -e ".[dev]"
-
       - name: Run Mypy
         run: mypy src/
 
   test:
-    name: Test (Python ${{ matrix.python-version }})
+    name: Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -69,8 +54,19 @@ jobs:
       - name: Run tests with coverage
         run: pytest --cov --cov-report=term-missing
 
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Nix build
+        run: nix build .#finwise-python${PYTHON_VERSION/./}
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+
   nix-check:
-    name: Nix Check
+    name: Nix Flake Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -83,22 +79,3 @@ jobs:
 
       - name: Check flake
         run: nix flake check
-
-  nix-build:
-    name: Nix Build (Python ${{ matrix.python-version }})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["311", "312", "313"]
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-
-      - name: Build package
-        run: nix build .#finwise-python${{ matrix.python-version }}
