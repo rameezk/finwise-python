@@ -1,8 +1,11 @@
-# FinWise Python SDK
+# FinWise Python SDK (Unofficial)
 
+![Unofficial](https://img.shields.io/badge/Status-Unofficial-orange?style=for-the-badge)
 ![PyPI - Version](https://img.shields.io/pypi/v/finwise-python?style=for-the-badge)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/finwise-python?style=for-the-badge)
 ![PyPI - License](https://img.shields.io/pypi/l/finwise-python?style=for-the-badge&color=blue)
+
+> **Note:** This is an unofficial, community-maintained Python SDK for the FinWise API. It is not affiliated with, endorsed by, or officially supported by FinWise.
 
 A simple Python client for the [FinWise API](https://finwiseapp.io/docs/api).
 

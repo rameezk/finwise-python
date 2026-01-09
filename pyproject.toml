@@ -5,11 +5,11 @@ build-backend = "hatchling.build"
 [project]
 name = "finwise-python"
 version = "1.1.3"
-description = "Python SDK for the FinWise API"
+description = "Unofficial Python SDK for the FinWise API"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
-authors = [{ name = "FinWise", email = "support@finwiseapp.io" }]
+authors = [{ name = "Rameez Khan" }]
 keywords = ["finwise", "api", "sdk", "finance", "banking", "budgeting"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -43,7 +43,7 @@ dev = [
 [project.urls]
 Homepage = "https://finwiseapp.io"
 Documentation = "https://finwiseapp.io/docs/api"
-Repository = "https://github.com/finwise/finwise-python"
+Repository = "https://github.com/rameezk/finwise-python"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/finwise"]

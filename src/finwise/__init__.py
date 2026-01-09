@@ -1,7 +1,8 @@
 """
-FinWise Python SDK.
+FinWise Python SDK (Unofficial).
 
-A simple, well-documented Python client for the FinWise API.
+An unofficial, community-maintained Python client for the FinWise API.
+This project is not affiliated with or endorsed by FinWise.
 
 Quick Start:
     >>> from finwise import FinWise

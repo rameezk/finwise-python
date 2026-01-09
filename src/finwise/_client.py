@@ -18,10 +18,12 @@ if TYPE_CHECKING:
 
 class FinWise:
     """
-    FinWise API client.
+    FinWise API client (Unofficial).
 
-    The main entry point for interacting with the FinWise API. Provides access
-    to all API resources through a simple, intuitive interface.
+    An unofficial, community-maintained client for interacting with the FinWise API.
+    This project is not affiliated with or endorsed by FinWise.
+
+    Provides access to all API resources through a simple, intuitive interface.
 
     Args:
         api_key: Your FinWise API key. If not provided, reads from the
