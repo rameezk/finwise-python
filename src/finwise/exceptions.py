@@ -174,6 +174,42 @@ class FinWiseTimeoutError(FinWiseError):
     pass
 
 
+def _extract_error_message(response_body: dict[str, Any]) -> str:
+    """
+    Extract error message from API response formats.
+
+    The FinWise API returns errors in the format:
+        {"error": {"errors": [...], "name": "...", "message": "..."}}
+
+    This function handles multiple formats for robustness.
+
+    Args:
+        response_body: Parsed JSON response body.
+
+    Returns:
+        Extracted error message or a fallback message.
+    """
+    # Try top-level message first
+    if "message" in response_body and isinstance(response_body["message"], str):
+        return response_body["message"]
+
+    # Try nested error.message (actual API format)
+    if "error" in response_body and isinstance(response_body["error"], dict):
+        error_obj = response_body["error"]
+        if "message" in error_obj and isinstance(error_obj["message"], str):
+            return error_obj["message"]
+
+    # Try detail (FastAPI style)
+    if "detail" in response_body and isinstance(response_body["detail"], str):
+        return response_body["detail"]
+
+    # Fallback: include response body for debugging
+    if response_body:
+        return f"API error: {response_body}"
+
+    return "Unknown error (empty response body)"
+
+
 def raise_for_status(
     status_code: int,
     response_body: dict[str, Any],
@@ -190,7 +226,7 @@ def raise_for_status(
     Raises:
         FinWiseAPIError: Appropriate subclass based on status code.
     """
-    message = response_body.get("message", "Unknown error")
+    message = _extract_error_message(response_body)
     error_code = response_body.get("code")
 
     kwargs: dict[str, Any] = {

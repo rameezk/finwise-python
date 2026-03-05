@@ -31,7 +31,7 @@ subcategory = client.transaction_categories.create(
 ```python
 categories = client.transaction_categories.list()
 
-for cat in categories.data:
+for cat in categories:
     prefix = "  " if cat.is_subcategory else ""
     print(f"{prefix}{cat.name}")
 ```

@@ -9,7 +9,6 @@ from finwise.models.transaction_category import (
     TransactionCategoryCreateRequest,
 )
 from finwise.resources._base import BaseResource
-from finwise.types.pagination import PaginatedResponse
 
 
 class TransactionCategoriesResource(BaseResource):
@@ -96,20 +95,19 @@ class TransactionCategoriesResource(BaseResource):
         self,
         *,
         parent_id: Optional[str] = None,
-        page_number: int = 1,
-        page_size: int = 100,
-    ) -> PaginatedResponse[TransactionCategory]:
+    ) -> list[TransactionCategory]:
         """
-        List transaction categories with pagination.
+        List transaction categories.
+
+        Note: The API does not support pagination for this endpoint.
+        All categories are returned.
 
         Args:
             parent_id: Optional filter by parent category ID.
                       Use None to get top-level categories only.
-            page_number: Page number to retrieve (default: 1).
-            page_size: Number of items per page (default: 100, max: 500).
 
         Returns:
-            Paginated response containing TransactionCategory objects.
+            List of TransactionCategory objects.
 
         Example:
             >>> # List all categories
@@ -122,27 +120,22 @@ class TransactionCategoriesResource(BaseResource):
             ...     parent_id="cat_food",
             ... )
         """
-        params = self._build_pagination_params(page_number, page_size)
+        params: dict[str, str] = {}
 
         if parent_id is not None:
             params["parentId"] = parent_id
 
-        response = self._transport.get(self._path, params=params)
+        response = self._transport.get(self._path, params=params or None)
 
-        categories = [
+        # API returns raw list
+        if isinstance(response, list):
+            return [TransactionCategory.model_validate(item) for item in response]
+
+        # Fallback for wrapped response
+        return [
             TransactionCategory.model_validate(item)
             for item in response.get("data", [])
         ]
-
-        return PaginatedResponse[TransactionCategory](
-            data=categories,
-            page_number=response.get("pageNumber", page_number),
-            page_size=response.get("pageSize", page_size),
-            total_count=response.get("totalCount", len(categories)),
-            total_pages=response.get("totalPages", 1),
-            has_next=response.get("hasNext", False),
-            has_previous=response.get("hasPrevious", False),
-        )
 
     def delete(self, category_id: str) -> None:
         """

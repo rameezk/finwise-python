@@ -13,7 +13,7 @@ For the official API documentation, see [finwiseapp.io/docs/api](https://finwise
 
 - **Type-safe**: Full type hints and Pydantic models
 - **Automatic retries**: Exponential backoff for transient errors
-- **Pagination support**: Easy iteration through paginated results
+- **Simple API**: Returns plain Python lists for easy iteration
 - **Context manager**: Automatic resource cleanup
 
 ## Quick Example
@@ -25,7 +25,7 @@ client = FinWise(api_key="your-api-key")
 
 # List all accounts
 accounts = client.accounts.list()
-for account in accounts.data:
+for account in accounts:
     print(f"{account.name}: {account.currency} {account.balance}")
 ```
 

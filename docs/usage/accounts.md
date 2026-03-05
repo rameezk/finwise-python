@@ -50,17 +50,9 @@ account = client.accounts.update(
 ## List Accounts
 
 ```python
-# Basic listing
 accounts = client.accounts.list()
-for account in accounts.data:
+for account in accounts:
     print(f"  - {account.name}")
-
-# With pagination
-accounts = client.accounts.list(page_number=1, page_size=50)
-print(f"Total accounts: {accounts.total_count}")
-
-if accounts.has_next:
-    next_page = client.accounts.list(page_number=2, page_size=50)
 ```
 
 ## Archive an Account

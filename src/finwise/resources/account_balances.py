@@ -155,7 +155,7 @@ class AccountBalancesResource(BaseResource):
         if as_of_date:
             params["asOfDate"] = as_of_date.isoformat()
         if currency:
-            params["currency"] = currency
+            params["currencyCode"] = currency
 
         response = self._transport.get(
             f"{self._path}/aggregated", params=params or None
