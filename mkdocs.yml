@@ -46,6 +46,7 @@ nav:
       - Transactions: usage/transactions.md
       - Account Balances: usage/account-balances.md
       - Transaction Categories: usage/transaction-categories.md
+      - Category Budgets: usage/category-budgets.md
   - Reference:
       - Error Handling: reference/error-handling.md
       - Pagination: reference/pagination.md

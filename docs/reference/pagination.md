@@ -1,7 +1,6 @@
 # Pagination
 
-!!! note "API Behavior"
-    The FinWise API does not currently support pagination for list endpoints. All `list()` methods return all available items as a simple Python list.
+All list endpoints support pagination and return a `PaginatedResponse` object.
 
 ## Basic Usage
 
@@ -10,39 +9,67 @@ from finwise import FinWise
 
 client = FinWise(api_key="your-api-key")
 
-# Get all accounts
-accounts = client.accounts.list()
-print(f"Found {len(accounts)} accounts")
+# Get first page of accounts
+result = client.accounts.list(page_number=1, page_size=50)
 
-# Iterate through items
-for account in accounts:
+print(f"Page {result.page_number} of {result.total_pages}")
+print(f"Total items: {result.total_count}")
+
+# Iterate through items on this page
+for account in result.data:
     print(account.name)
 
 # Access by index
-first_account = accounts[0]
+first_account = result[0]
+```
+
+## Paginated Response
+
+The `PaginatedResponse[T]` object contains:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `data` | `list[T]` | Items on the current page |
+| `page_number` | `int` | Current page number |
+| `page_size` | `int` | Items per page |
+| `total_count` | `int` | Total items across all pages |
+| `total_pages` | `int` | Total number of pages |
+| `has_next` | `bool` | Whether there's a next page |
+| `has_previous` | `bool` | Whether there's a previous page |
+
+## Iterating Through Pages
+
+```python
+page_number = 1
+all_transactions = []
+
+while True:
+    result = client.transactions.list(page_number=page_number, page_size=100)
+    all_transactions.extend(result.data)
+
+    if not result.has_next:
+        break
+    page_number += 1
+
+print(f"Fetched {len(all_transactions)} total transactions")
 ```
 
 ## List Methods
 
-All list methods return a `list` of model objects:
+All list methods return `PaginatedResponse`:
 
 | Method | Return Type |
 |--------|-------------|
-| `accounts.list()` | `list[Account]` |
-| `transactions.list()` | `list[Transaction]` |
-| `transaction_categories.list()` | `list[TransactionCategory]` |
-| `account_balances.list()` | `list[AccountBalance]` |
+| `accounts.list()` | `PaginatedResponse[Account]` |
+| `transactions.list()` | `PaginatedResponse[Transaction]` |
+| `transaction_categories.list()` | `PaginatedResponse[TransactionCategory]` |
+| `account_balances.list()` | `PaginatedResponse[AccountBalance]` |
 
-## Client-Side Filtering
+## Pagination Parameters
 
-The API does not support server-side filtering. You can filter results in Python:
+All list methods accept these parameters:
 
-```python
-# Filter transactions by type
-transactions = client.transactions.list()
-expenses = [t for t in transactions if t.type == "expense"]
-
-# Filter by date
-from datetime import date
-recent = [t for t in transactions if t.transaction_date >= date(2024, 1, 1)]
-```
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `page_number` | `int` | `1` | Page to retrieve (1-indexed) |
+| `page_size` | `int` | `100` | Items per page |
