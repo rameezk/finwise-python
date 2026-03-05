@@ -2,6 +2,22 @@
 
 <!-- version list -->
 
+## v2.0.0 (2026-03-05)
+
+### Bug Fixes
+
+- Align SDK with actual API behavior
+  ([`f1e44e9`](https://github.com/rameezk/finwise-python/commit/f1e44e92cf14c5daf0a8a88224f01009da9f4dfc))
+
+### Continuous Integration
+
+- Disable flakehub cache
+  ([`9a2e742`](https://github.com/rameezk/finwise-python/commit/9a2e7424ce7239b54898cadc6f5510a4e3f26fc0))
+
+- Fix permissions
+  ([`23cbda2`](https://github.com/rameezk/finwise-python/commit/23cbda2559a22f4ceed436e98597f1efa700683a))
+
+
 ## v1.4.0 (2026-01-09)
 
 ### Continuous Integration
