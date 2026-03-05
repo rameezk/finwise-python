@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v3.0.0 (2026-03-05)
+
+### Features
+
+- Add proper pagination
+  ([`7986dd3`](https://github.com/rameezk/finwise-python/commit/7986dd329fc9b0a6b3ba437e6d18012218adc31e))
+
+
 ## v2.1.0 (2026-03-05)
 
 ### Bug Fixes
