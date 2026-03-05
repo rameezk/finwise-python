@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime
+from datetime import datetime
 from decimal import Decimal
 from typing import Literal, Optional
 
@@ -109,25 +109,31 @@ class AccountBalance(BaseModel):
 
 class AggregatedBalance(BaseModel):
     """
-    Aggregated balance response model.
+    Aggregated balance snapshot at a point in time.
 
-    Provides a summary of balances across accounts.
+    Represents a single balance snapshot in the aggregated balance history.
 
     Attributes:
-        total_balance: Sum of all account balances.
-        currency: Currency of the aggregated balance.
-        as_of_date: Date of the aggregation.
-        account_count: Number of accounts included.
+        date: Date/time of the balance snapshot.
+        amount: Balance amount with currency.
 
     Example:
-        >>> summary = client.account_balances.aggregated()
-        >>> print(f"Total: {summary.currency} {summary.total_balance}")
-        >>> print(f"Across {summary.account_count} accounts")
+        >>> snapshots = client.account_balances.aggregated(currency="ZAR")
+        >>> for snapshot in snapshots:
+        ...     print(f"{snapshot.date}: {snapshot.amount.format()}")
     """
 
-    total_balance: Decimal = Field(..., alias="totalBalance")
-    currency: str
-    as_of_date: date = Field(..., alias="asOfDate")
-    account_count: int = Field(..., alias="accountCount")
+    date: datetime
+    amount: Amount
 
     model_config = ConfigDict(populate_by_name=True)
+
+    @property
+    def value(self) -> Decimal:
+        """Get the balance value."""
+        return self.amount.amount
+
+    @property
+    def currency(self) -> str:
+        """Get the currency code."""
+        return self.amount.currency_code

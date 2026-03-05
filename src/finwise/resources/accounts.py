@@ -12,6 +12,11 @@ from finwise.models.account import (
     AccountUpdateRequest,
 )
 from finwise.resources._base import BaseResource
+from finwise.types.pagination import (
+    PaginatedResponse,
+    PaginationInfo,
+    build_list_params,
+)
 
 
 class AccountsResource(BaseResource):
@@ -162,12 +167,21 @@ class AccountsResource(BaseResource):
 
         return Account.model_validate(response)
 
-    def list(self) -> list[Account]:
+    def list(
+        self,
+        *,
+        page_number: int = 1,
+        page_size: int = 100,
+    ) -> PaginatedResponse[Account]:
         """
-        List all accounts.
+        List accounts with pagination.
+
+        Args:
+            page_number: Page number to retrieve (default: 1).
+            page_size: Number of items per page (default: 100).
 
         Returns:
-            List of Account objects.
+            Paginated response containing Account objects.
 
         Raises:
             AuthenticationError: If the API key is invalid.
@@ -176,15 +190,27 @@ class AccountsResource(BaseResource):
             >>> accounts = client.accounts.list()
             >>> for account in accounts:
             ...     print(f"{account.name}: {account.balance}")
+            >>>
+            >>> # Pagination
+            >>> if accounts.has_next:
+            ...     page2 = client.accounts.list(page_number=2)
         """
-        response = self._transport.get(self._path)
+        params = build_list_params(page_number, page_size)
+        response = self._transport.get(self._path, params=params, include_headers=True)
 
-        # API returns raw list
-        if isinstance(response, list):
-            return [Account.model_validate(item) for item in response]
+        items = response.body if isinstance(response.body, list) else []
+        accounts = [Account.model_validate(item) for item in items]
+        pagination = PaginationInfo.from_headers(response.headers)
 
-        # Fallback for paginated response
-        return [Account.model_validate(item) for item in response.get("data", [])]
+        return PaginatedResponse[Account](
+            data=accounts,
+            page_number=pagination.page_number,
+            page_size=pagination.page_size,
+            total_count=pagination.total_count,
+            total_pages=pagination.total_pages,
+            has_next=pagination.has_next,
+            has_previous=pagination.has_previous,
+        )
 
     def archive(self, account_id: str) -> Account:
         """

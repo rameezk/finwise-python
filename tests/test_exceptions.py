@@ -131,7 +131,7 @@ class TestApiErrorFormat:
         )
 
         with pytest.raises(ValidationError) as exc_info:
-            client.account_balances.aggregated()
+            client.account_balances.aggregated(currency="INVALID")
 
         assert exc_info.value.message == "Invalid request query params"
         assert exc_info.value.status_code == 400

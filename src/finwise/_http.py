@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import time
 import uuid
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Optional
 
 import httpx
@@ -18,6 +19,14 @@ from finwise.exceptions import (
 
 if TYPE_CHECKING:
     from httpx import Client as HttpxClient
+
+
+@dataclass
+class APIResponse:
+    """Response from the API including headers."""
+
+    body: Any
+    headers: dict[str, str]
 
 
 class HTTPTransport:
@@ -67,6 +76,7 @@ class HTTPTransport:
         *,
         json: Optional[dict[str, Any]] = None,
         params: Optional[dict[str, Any]] = None,
+        include_headers: bool = False,
     ) -> Any:
         """
         Make an HTTP request with retry logic.
@@ -76,9 +86,10 @@ class HTTPTransport:
             path: API endpoint path (e.g., "/accounts").
             json: Request body for POST/PATCH requests.
             params: Query parameters.
+            include_headers: If True, return APIResponse with headers.
 
         Returns:
-            Parsed JSON response as a dictionary.
+            Parsed JSON response, or APIResponse if include_headers=True.
 
         Raises:
             FinWiseAPIError: On API error responses.
@@ -136,6 +147,11 @@ class HTTPTransport:
                         request_id=request_id,
                     )
 
+                if include_headers:
+                    return APIResponse(
+                        body=response_body,
+                        headers=dict(response.headers),
+                    )
                 return response_body
 
             except httpx.ConnectError as e:
@@ -163,9 +179,15 @@ class HTTPTransport:
             raise last_exception
         raise RuntimeError("Unexpected state in request retry loop")
 
-    def get(self, path: str, *, params: Optional[dict[str, Any]] = None) -> Any:
+    def get(
+        self,
+        path: str,
+        *,
+        params: Optional[dict[str, Any]] = None,
+        include_headers: bool = False,
+    ) -> Any:
         """Make a GET request."""
-        return self.request("GET", path, params=params)
+        return self.request("GET", path, params=params, include_headers=include_headers)
 
     def post(
         self,

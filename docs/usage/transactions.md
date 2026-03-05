@@ -35,22 +35,14 @@ transaction = client.transactions.create(
 ## List Transactions
 
 ```python
-# Basic listing
 transactions = client.transactions.list()
-
-# With date filters
-transactions = client.transactions.list(
-    start_date=date(2024, 1, 1),
-    end_date=date(2024, 1, 31),
-    type="expense",
-)
 
 for txn in transactions:
     print(f"{txn.transaction_date}: {txn.description} ({txn.amount.format()})")
 ```
 
-!!! note "Filtering"
-    The API supports filtering by `category_id`, `start_date`, `end_date`, and `type`. Filtering by account ID is not supported.
+!!! note "No Filtering"
+    The API does not support filtering. All transactions are returned.
 
 ## Archive a Transaction
 

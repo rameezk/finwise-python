@@ -14,7 +14,9 @@ from finwise.models.account_balance import (
     Amount,
     BalanceType,
 )
+from finwise.models.category_budget import AggregatedCategoryBudget
 from finwise.models.transaction import (
+    AggregatedTransaction,
     Transaction,
     TransactionCreateRequest,
 )
@@ -36,7 +38,10 @@ __all__ = [
     "AggregatedBalance",
     "Amount",
     "BalanceType",
+    # Category Budget
+    "AggregatedCategoryBudget",
     # Transaction
+    "AggregatedTransaction",
     "Transaction",
     "TransactionCreateRequest",
     # Transaction Category

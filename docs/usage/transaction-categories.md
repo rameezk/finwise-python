@@ -36,14 +36,6 @@ for cat in categories:
     print(f"{prefix}{cat.name}")
 ```
 
-To list only subcategories of a specific parent:
-
-```python
-subcategories = client.transaction_categories.list(
-    parent_id="cat_groceries"
-)
-```
-
 ## Delete a Category
 
 ```python

@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import json
+import math
 from collections.abc import Iterator
+from dataclasses import dataclass
 from typing import Any, Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -10,30 +13,50 @@ from pydantic import BaseModel, ConfigDict, Field
 T = TypeVar("T")
 
 
-class PaginationParams(BaseModel):
-    """
-    Pagination parameters for list requests.
+@dataclass
+class PaginationInfo:
+    """Pagination info extracted from response headers."""
 
-    Attributes:
-        page_number: Page number to retrieve (1-indexed, default: 1).
-        page_size: Number of items per page (default: 100, max: 500).
+    page_number: int
+    page_size: int
+    total_count: int
+    has_next: bool
 
-    Example:
-        >>> params = PaginationParams(page_number=2, page_size=50)
-        >>> client.accounts.list(**params.to_query_dict())
-    """
+    @classmethod
+    def from_headers(cls, headers: dict[str, str]) -> PaginationInfo:
+        """Create from response headers."""
+        return cls(
+            page_number=int(headers.get("x-page-number", "1")),
+            page_size=int(headers.get("x-page-size", "100")),
+            total_count=int(headers.get("x-count", "0")),
+            has_next=headers.get("x-has-next-page", "false").lower() == "true",
+        )
 
-    page_number: int = Field(default=1, ge=1, alias="pageNumber")
-    page_size: int = Field(default=100, ge=1, le=500, alias="pageSize")
+    @property
+    def total_pages(self) -> int:
+        """Calculate total pages."""
+        if self.page_size == 0:
+            return 0
+        return math.ceil(self.total_count / self.page_size)
 
-    model_config = ConfigDict(populate_by_name=True)
+    @property
+    def has_previous(self) -> bool:
+        """Check if there's a previous page."""
+        return self.page_number > 1
 
-    def to_query_dict(self) -> dict[str, Any]:
-        """Convert to query parameter dictionary for API requests."""
-        return {
-            "pageNumber": self.page_number,
-            "pageSize": self.page_size,
-        }
+
+def build_list_params(
+    page_number: int = 1,
+    page_size: int = 100,
+    filters: dict[str, Any] | None = None,
+) -> dict[str, str]:
+    """Build query params for list endpoints with JSON-encoded values."""
+    params: dict[str, str] = {
+        "pagination": json.dumps({"pageNumber": page_number, "pageSize": page_size})
+    }
+    if filters:
+        params["filters"] = json.dumps(filters)
+    return params
 
 
 class PaginatedResponse(BaseModel, Generic[T]):

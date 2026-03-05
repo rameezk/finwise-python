@@ -108,7 +108,6 @@ def sample_transaction() -> dict[str, Any]:
         "date": "2024-01-15T10:00:00Z",
         "description": "Grocery shopping",
         "categoryId": "cat_groceries",
-        "type": "expense",
         "createdAt": "2024-01-15T10:00:00Z",
         "updatedAt": "2024-01-15T10:00:00Z",
         "archivedAt": None,

@@ -9,6 +9,7 @@ from finwise._config import ClientConfig
 from finwise._http import HTTPTransport
 from finwise.resources.account_balances import AccountBalancesResource
 from finwise.resources.accounts import AccountsResource
+from finwise.resources.category_budgets import CategoryBudgetsResource
 from finwise.resources.transaction_categories import TransactionCategoriesResource
 from finwise.resources.transactions import TransactionsResource
 
@@ -53,6 +54,7 @@ class FinWise:
     Attributes:
         accounts: Access the Accounts API resource.
         account_balances: Access the Account Balances API resource.
+        category_budgets: Access the Category Budgets API resource.
         transactions: Access the Transactions API resource.
         transaction_categories: Access the Transaction Categories API resource.
     """
@@ -62,6 +64,9 @@ class FinWise:
 
     account_balances: AccountBalancesResource
     """Account Balances API resource for balance records and aggregations."""
+
+    category_budgets: CategoryBudgetsResource
+    """Category Budgets API resource for budget aggregations."""
 
     transactions: TransactionsResource
     """Transactions API resource for managing financial transactions."""
@@ -102,6 +107,7 @@ class FinWise:
         # Initialize API resources
         self.accounts = AccountsResource(self._transport)
         self.account_balances = AccountBalancesResource(self._transport)
+        self.category_budgets = CategoryBudgetsResource(self._transport)
         self.transactions = TransactionsResource(self._transport)
         self.transaction_categories = TransactionCategoriesResource(self._transport)
 

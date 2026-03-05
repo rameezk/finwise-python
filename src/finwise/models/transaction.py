@@ -78,7 +78,7 @@ class Transaction(BaseModel):
     date: datetime
     description: Optional[str] = None
     category_id: Optional[str] = Field(None, alias="categoryId")
-    type: str
+    type: Optional[str] = None
     created_at: datetime = Field(..., alias="createdAt")
     updated_at: datetime = Field(..., alias="updatedAt")
     archived_at: Optional[datetime] = Field(None, alias="archivedAt")
@@ -109,43 +109,33 @@ class Transaction(BaseModel):
     @property
     def is_income(self) -> bool:
         """Check if this is an income transaction."""
-        return self.type == "income"
+        return self.type == "income" if self.type else False
 
     @property
     def is_expense(self) -> bool:
         """Check if this is an expense transaction."""
-        return self.type == "expense"
+        return self.type == "expense" if self.type else False
 
 
-class AggregatedTransactions(BaseModel):
+class AggregatedTransaction(BaseModel):
     """
-    Aggregated transactions response model.
+    Aggregated transaction total for a category/type combination.
 
-    Provides a summary of transactions over a period.
+    Represents the sum of transactions for a specific category and transaction type.
 
     Attributes:
-        total_income: Sum of all income transactions.
-        total_expenses: Sum of all expense transactions (as positive number).
-        net_amount: Net amount (income - expenses).
-        transaction_count: Number of transactions in the period.
-        start_date: Start date of the aggregation period.
-        end_date: End date of the aggregation period.
+        amount: Total amount for this category/type combination.
+        category_id: Transaction category ID (if aggregated by category).
+        transaction_type: Transaction type (e.g., "debit", "credit").
 
     Example:
-        >>> summary = client.transactions.aggregated(
-        ...     start_date=date(2024, 1, 1),
-        ...     end_date=date(2024, 1, 31),
-        ... )
-        >>> print(f"Income: {summary.total_income}")
-        >>> print(f"Expenses: {summary.total_expenses}")
-        >>> print(f"Net: {summary.net_amount}")
+        >>> aggregated = client.transactions.aggregated(currency_code="ZAR")
+        >>> for item in aggregated:
+        ...     print(f"Category {item.category_id}: {item.amount} ({item.transaction_type})")
     """
 
-    total_income: Decimal = Field(..., alias="totalIncome")
-    total_expenses: Decimal = Field(..., alias="totalExpenses")
-    net_amount: Decimal = Field(..., alias="netAmount")
-    transaction_count: int = Field(..., alias="transactionCount")
-    start_date: date = Field(..., alias="startDate")
-    end_date: date = Field(..., alias="endDate")
+    amount: Decimal
+    category_id: Optional[str] = Field(None, alias="transactionCategoryId")
+    transaction_type: Optional[str] = Field(None, alias="transactionType")
 
     model_config = ConfigDict(populate_by_name=True)

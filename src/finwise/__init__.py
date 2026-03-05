@@ -74,11 +74,16 @@ from finwise.models import (
     AccountCreateRequest,
     AccountUpdateRequest,
     AggregatedBalance,
+    AggregatedCategoryBudget,
+    AggregatedTransaction,
     Transaction,
     TransactionCategory,
     TransactionCategoryCreateRequest,
     TransactionCreateRequest,
 )
+
+# Types
+from finwise.types.pagination import PaginatedResponse
 
 __all__ = [
     # Version
@@ -105,10 +110,15 @@ __all__ = [
     "AccountBalance",
     "AccountBalanceCreateRequest",
     "AggregatedBalance",
+    # Models - Category Budget
+    "AggregatedCategoryBudget",
     # Models - Transaction
+    "AggregatedTransaction",
     "Transaction",
     "TransactionCreateRequest",
     # Models - Transaction Category
     "TransactionCategory",
     "TransactionCategoryCreateRequest",
+    # Types
+    "PaginatedResponse",
 ]

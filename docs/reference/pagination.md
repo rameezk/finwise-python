@@ -33,21 +33,16 @@ All list methods return a `list` of model objects:
 | `transaction_categories.list()` | `list[TransactionCategory]` |
 | `account_balances.list()` | `list[AccountBalance]` |
 
-## Filtering
+## Client-Side Filtering
 
-While pagination is not supported, you can still filter results using available parameters:
+The API does not support server-side filtering. You can filter results in Python:
 
 ```python
-# Filter transactions by date range
-transactions = client.transactions.list(
-    start_date=date(2024, 1, 1),
-    end_date=date(2024, 1, 31),
-    type="expense",
-)
+# Filter transactions by type
+transactions = client.transactions.list()
+expenses = [t for t in transactions if t.type == "expense"]
 
-# Filter by account
-transactions = client.transactions.list(account_id="acc_123")
-
-# Filter account balances
-balances = client.account_balances.list(account_id="acc_123")
+# Filter by date
+from datetime import date
+recent = [t for t in transactions if t.transaction_date >= date(2024, 1, 1)]
 ```

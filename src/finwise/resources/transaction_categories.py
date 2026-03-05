@@ -9,6 +9,11 @@ from finwise.models.transaction_category import (
     TransactionCategoryCreateRequest,
 )
 from finwise.resources._base import BaseResource
+from finwise.types.pagination import (
+    PaginatedResponse,
+    PaginationInfo,
+    build_list_params,
+)
 
 
 class TransactionCategoriesResource(BaseResource):
@@ -94,48 +99,40 @@ class TransactionCategoriesResource(BaseResource):
     def list(
         self,
         *,
-        parent_id: Optional[str] = None,
-    ) -> list[TransactionCategory]:
+        page_number: int = 1,
+        page_size: int = 100,
+    ) -> PaginatedResponse[TransactionCategory]:
         """
-        List transaction categories.
-
-        Note: The API does not support pagination for this endpoint.
-        All categories are returned.
+        List transaction categories with pagination.
 
         Args:
-            parent_id: Optional filter by parent category ID.
-                      Use None to get top-level categories only.
+            page_number: Page number to retrieve (default: 1).
+            page_size: Number of items per page (default: 100).
 
         Returns:
-            List of TransactionCategory objects.
+            Paginated response containing TransactionCategory objects.
 
         Example:
-            >>> # List all categories
             >>> categories = client.transaction_categories.list()
             >>> for cat in categories:
             ...     print(f"{cat.name} ({cat.color or 'no color'})")
-            >>>
-            >>> # List subcategories of a parent
-            >>> subcategories = client.transaction_categories.list(
-            ...     parent_id="cat_food",
-            ... )
         """
-        params: dict[str, str] = {}
+        params = build_list_params(page_number, page_size)
+        response = self._transport.get(self._path, params=params, include_headers=True)
 
-        if parent_id is not None:
-            params["parentId"] = parent_id
+        items = response.body if isinstance(response.body, list) else []
+        categories = [TransactionCategory.model_validate(item) for item in items]
+        pagination = PaginationInfo.from_headers(response.headers)
 
-        response = self._transport.get(self._path, params=params or None)
-
-        # API returns raw list
-        if isinstance(response, list):
-            return [TransactionCategory.model_validate(item) for item in response]
-
-        # Fallback for wrapped response
-        return [
-            TransactionCategory.model_validate(item)
-            for item in response.get("data", [])
-        ]
+        return PaginatedResponse[TransactionCategory](
+            data=categories,
+            page_number=pagination.page_number,
+            page_size=pagination.page_size,
+            total_count=pagination.total_count,
+            total_pages=pagination.total_pages,
+            has_next=pagination.has_next,
+            has_previous=pagination.has_previous,
+        )
 
     def delete(self, category_id: str) -> None:
         """

@@ -195,21 +195,31 @@ class TestAccountsList:
     ) -> None:
         """Test successful account listing."""
         mock_api.get("/accounts").mock(
-            return_value=Response(200, json=sample_accounts_list)
+            return_value=Response(
+                200,
+                json=sample_accounts_list["data"],
+                headers={
+                    "x-count": "2",
+                    "x-has-next-page": "false",
+                    "x-page-number": "1",
+                    "x-page-size": "100",
+                },
+            )
         )
 
-        accounts = client.accounts.list()
+        result = client.accounts.list()
 
-        assert isinstance(accounts, list)
-        assert len(accounts) == 2
+        assert len(result.data) == 2
+        assert result.total_count == 2
+        assert not result.has_next
 
         # Test iteration
-        account_names = [acc.name for acc in accounts]
+        account_names = [acc.name for acc in result.data]
         assert "Test Savings Account" in account_names
         assert "Test Checking Account" in account_names
 
         # Test index access
-        assert accounts[0].name == "Test Savings Account"
+        assert result[0].name == "Test Savings Account"
 
     def test_list_accounts_empty(
         self,
@@ -217,21 +227,23 @@ class TestAccountsList:
         mock_api: respx.Router,
     ) -> None:
         """Test listing with no accounts."""
-        empty_response = {
-            "data": [],
-            "pageNumber": 1,
-            "pageSize": 100,
-            "totalCount": 0,
-            "totalPages": 0,
-            "hasNext": False,
-            "hasPrevious": False,
-        }
-        mock_api.get("/accounts").mock(return_value=Response(200, json=empty_response))
+        mock_api.get("/accounts").mock(
+            return_value=Response(
+                200,
+                json=[],
+                headers={
+                    "x-count": "0",
+                    "x-has-next-page": "false",
+                    "x-page-number": "1",
+                    "x-page-size": "100",
+                },
+            )
+        )
 
-        accounts = client.accounts.list()
+        result = client.accounts.list()
 
-        assert isinstance(accounts, list)
-        assert len(accounts) == 0
+        assert len(result.data) == 0
+        assert result.total_count == 0
 
 
 class TestAccountsArchive:

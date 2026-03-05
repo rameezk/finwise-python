@@ -28,33 +28,26 @@ balance = client.account_balances.create(
 ## List Balance Records
 
 ```python
-balances = client.account_balances.list(account_id="acc_123")
+balances = client.account_balances.list()
 
 for balance in balances:
-    print(f"{balance.balance_date}: {balance.balance}")
+    if balance.amount:
+        print(f"{balance.date}: {balance.amount.format()}")
 ```
 
-## Get Aggregated Balance
+## Get Aggregated Balance History
 
-Get the total balance across all accounts for a specific currency:
-
-```python
-summary = client.account_balances.aggregated(currency="USD")
-print(f"Total: {summary.currency} {summary.total_balance}")
-print(f"Across {summary.account_count} accounts")
-```
-
-You can also get the balance as of a specific date:
+Get balance history over time for a specific currency:
 
 ```python
-summary = client.account_balances.aggregated(
-    currency="USD",
-    as_of_date=date(2024, 1, 31)
-)
+snapshots = client.account_balances.aggregated(currency="ZAR")
+
+for snapshot in snapshots[-5:]:  # Last 5 snapshots
+    print(f"{snapshot.date}: {snapshot.amount.format()}")
 ```
 
 !!! note "Currency Parameter"
-    The `currency` parameter specifies which currency to aggregate balances for (e.g., "USD", "EUR", "ZAR").
+    The `currency` parameter is required and specifies which currency to aggregate balances for (e.g., "USD", "EUR", "ZAR").
 
 ## Archive a Balance Record
 

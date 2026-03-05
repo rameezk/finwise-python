@@ -1,8 +1,8 @@
 """Type definitions."""
 
-from finwise.types.pagination import PaginatedResponse, PaginationParams
+from finwise.types.pagination import PaginatedResponse, PaginationInfo
 
 __all__ = [
     "PaginatedResponse",
-    "PaginationParams",
+    "PaginationInfo",
 ]
