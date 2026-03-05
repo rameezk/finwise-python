@@ -99,16 +99,20 @@ def sample_transaction() -> dict[str, Any]:
     """Sample transaction response data."""
     return {
         "id": "txn_789xyz",
+        "userId": "user_123",
         "accountId": "acc_123abc",
-        "amount": "-50.00",
-        "transactionDate": "2024-01-15",
+        "amount": {
+            "amount": "-50.00",
+            "currencyCode": "USD",
+        },
+        "date": "2024-01-15T10:00:00Z",
         "description": "Grocery shopping",
         "categoryId": "cat_groceries",
-        "categoryName": "Groceries",
         "type": "expense",
         "createdAt": "2024-01-15T10:00:00Z",
         "updatedAt": "2024-01-15T10:00:00Z",
         "archivedAt": None,
+        "dataImportId": None,
     }
 
 

@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import datetime as dt
 from datetime import date, datetime
 from decimal import Decimal
 from typing import Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
+
+from finwise.models.account_balance import Amount
 
 
 class TransactionCreateRequest(BaseModel):
@@ -50,36 +53,53 @@ class Transaction(BaseModel):
 
     Attributes:
         id: Unique transaction identifier.
-        account_id: ID of the account.
-        amount: Transaction amount.
-        transaction_date: Date of the transaction.
+        user_id: ID of the user who owns this transaction.
+        account_id: ID of the account (nullable).
+        amount: Transaction amount with currency.
+        date: Date/time of the transaction.
         description: Transaction description (if set).
         category_id: Category ID (if categorized).
-        category_name: Category name (if categorized).
         type: Transaction type.
         created_at: When the transaction was created.
         updated_at: When the transaction was last updated.
         archived_at: When the transaction was archived (None if active).
+        data_import_id: ID of the data import that created this record.
 
     Example:
         >>> transactions = client.transactions.list()
         >>> for txn in transactions:
-        ...     print(f"{txn.transaction_date}: {txn.description} ({txn.amount})")
+        ...     print(f"{txn.date}: {txn.description} ({txn.amount.format()})")
     """
 
     id: str
-    account_id: str = Field(..., alias="accountId")
-    amount: Decimal
-    transaction_date: date = Field(..., alias="transactionDate")
+    user_id: str = Field(..., alias="userId")
+    account_id: Optional[str] = Field(None, alias="accountId")
+    amount: Amount
+    date: datetime
     description: Optional[str] = None
     category_id: Optional[str] = Field(None, alias="categoryId")
-    category_name: Optional[str] = Field(None, alias="categoryName")
     type: str
     created_at: datetime = Field(..., alias="createdAt")
     updated_at: datetime = Field(..., alias="updatedAt")
     archived_at: Optional[datetime] = Field(None, alias="archivedAt")
+    data_import_id: Optional[str] = Field(None, alias="dataImportId")
 
     model_config = ConfigDict(populate_by_name=True)
+
+    @property
+    def value(self) -> Decimal:
+        """Get the transaction amount value."""
+        return self.amount.amount
+
+    @property
+    def currency(self) -> str:
+        """Get the currency code."""
+        return self.amount.currency_code
+
+    @property
+    def transaction_date(self) -> dt.date:
+        """Get the transaction date (for backwards compatibility)."""
+        return self.date.date()
 
     @property
     def is_archived(self) -> bool:

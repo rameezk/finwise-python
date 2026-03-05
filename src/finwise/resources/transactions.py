@@ -110,7 +110,6 @@ class TransactionsResource(BaseResource):
     def list(
         self,
         *,
-        account_id: Optional[str] = None,
         category_id: Optional[str] = None,
         start_date: Optional[date] = None,
         end_date: Optional[date] = None,
@@ -119,11 +118,10 @@ class TransactionsResource(BaseResource):
         """
         List transactions with optional filtering.
 
-        Note: The API does not support pagination for this endpoint.
+        Note: The API does not support pagination or filtering by account ID.
         All matching transactions are returned.
 
         Args:
-            account_id: Optional filter by account ID.
             category_id: Optional filter by category ID.
             start_date: Optional filter for transactions on or after this date.
             end_date: Optional filter for transactions on or before this date.
@@ -136,7 +134,7 @@ class TransactionsResource(BaseResource):
             >>> # List all transactions
             >>> transactions = client.transactions.list()
             >>> for txn in transactions:
-            ...     print(f"{txn.description}: {txn.amount}")
+            ...     print(f"{txn.description}: {txn.amount.format()}")
             >>>
             >>> # Filter by date range
             >>> transactions = client.transactions.list(
@@ -144,16 +142,11 @@ class TransactionsResource(BaseResource):
             ...     end_date=date(2024, 1, 31),
             ... )
             >>>
-            >>> # Filter by account and type
-            >>> expenses = client.transactions.list(
-            ...     account_id="acc_123",
-            ...     type="expense",
-            ... )
+            >>> # Filter by type
+            >>> expenses = client.transactions.list(type="expense")
         """
         params: dict[str, str] = {}
 
-        if account_id:
-            params["accountId"] = account_id
         if category_id:
             params["categoryId"] = category_id
         if start_date:
