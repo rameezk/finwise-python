@@ -15,7 +15,6 @@ from finwise.models.account_balance import (
     BalanceType,
 )
 from finwise.models.transaction import (
-    AggregatedTransactions,
     Transaction,
     TransactionCreateRequest,
 )
@@ -40,7 +39,6 @@ __all__ = [
     # Transaction
     "Transaction",
     "TransactionCreateRequest",
-    "AggregatedTransactions",
     # Transaction Category
     "TransactionCategory",
     "TransactionCategoryCreateRequest",

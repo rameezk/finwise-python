@@ -7,12 +7,10 @@ from decimal import Decimal
 from typing import Literal, Optional
 
 from finwise.models.transaction import (
-    AggregatedTransactions,
     Transaction,
     TransactionCreateRequest,
 )
 from finwise.resources._base import BaseResource
-from finwise.types.pagination import PaginatedResponse
 
 
 class TransactionsResource(BaseResource):
@@ -35,12 +33,8 @@ class TransactionsResource(BaseResource):
         >>>
         >>> # List transactions
         >>> transactions = client.transactions.list()
-        >>>
-        >>> # Get aggregated summary
-        >>> summary = client.transactions.aggregated(
-        ...     start_date=date(2024, 1, 1),
-        ...     end_date=date(2024, 1, 31),
-        ... )
+        >>> for txn in transactions:
+        ...     print(f"{txn.description}: {txn.amount}")
     """
 
     _path = "/transactions"
@@ -121,11 +115,12 @@ class TransactionsResource(BaseResource):
         start_date: Optional[date] = None,
         end_date: Optional[date] = None,
         type: Optional[Literal["income", "expense", "transfer"]] = None,
-        page_number: int = 1,
-        page_size: int = 100,
-    ) -> PaginatedResponse[Transaction]:
+    ) -> list[Transaction]:
         """
-        List transactions with pagination and filtering.
+        List transactions with optional filtering.
+
+        Note: The API does not support pagination for this endpoint.
+        All matching transactions are returned.
 
         Args:
             account_id: Optional filter by account ID.
@@ -133,15 +128,15 @@ class TransactionsResource(BaseResource):
             start_date: Optional filter for transactions on or after this date.
             end_date: Optional filter for transactions on or before this date.
             type: Optional filter by transaction type.
-            page_number: Page number to retrieve (default: 1).
-            page_size: Number of items per page (default: 100, max: 500).
 
         Returns:
-            Paginated response containing Transaction objects.
+            List of Transaction objects.
 
         Example:
             >>> # List all transactions
             >>> transactions = client.transactions.list()
+            >>> for txn in transactions:
+            ...     print(f"{txn.description}: {txn.amount}")
             >>>
             >>> # Filter by date range
             >>> transactions = client.transactions.list(
@@ -155,7 +150,7 @@ class TransactionsResource(BaseResource):
             ...     type="expense",
             ... )
         """
-        params = self._build_pagination_params(page_number, page_size)
+        params: dict[str, str] = {}
 
         if account_id:
             params["accountId"] = account_id
@@ -168,74 +163,14 @@ class TransactionsResource(BaseResource):
         if type:
             params["type"] = type
 
-        response = self._transport.get(self._path, params=params)
+        response = self._transport.get(self._path, params=params or None)
 
-        transactions = [
-            Transaction.model_validate(item) for item in response.get("data", [])
-        ]
+        # API returns raw list
+        if isinstance(response, list):
+            return [Transaction.model_validate(item) for item in response]
 
-        return PaginatedResponse[Transaction](
-            data=transactions,
-            page_number=response.get("pageNumber", page_number),
-            page_size=response.get("pageSize", page_size),
-            total_count=response.get("totalCount", len(transactions)),
-            total_pages=response.get("totalPages", 1),
-            has_next=response.get("hasNext", False),
-            has_previous=response.get("hasPrevious", False),
-        )
-
-    def aggregated(
-        self,
-        *,
-        start_date: Optional[date] = None,
-        end_date: Optional[date] = None,
-        account_id: Optional[str] = None,
-        category_id: Optional[str] = None,
-    ) -> AggregatedTransactions:
-        """
-        Get aggregated transaction summary.
-
-        Provides a summary of income, expenses, and net amount over
-        a specified period.
-
-        Args:
-            start_date: Start date for aggregation (default: first of month).
-            end_date: End date for aggregation (default: today).
-            account_id: Optional filter by account ID.
-            category_id: Optional filter by category ID.
-
-        Returns:
-            AggregatedTransactions with income/expense summary.
-
-        Example:
-            >>> from datetime import date
-            >>>
-            >>> # Get monthly summary
-            >>> summary = client.transactions.aggregated(
-            ...     start_date=date(2024, 1, 1),
-            ...     end_date=date(2024, 1, 31),
-            ... )
-            >>> print(f"Income: {summary.total_income}")
-            >>> print(f"Expenses: {summary.total_expenses}")
-            >>> print(f"Net: {summary.net_amount}")
-            >>> print(f"Transactions: {summary.transaction_count}")
-        """
-        params: dict[str, str] = {}
-
-        if start_date:
-            params["startDate"] = start_date.isoformat()
-        if end_date:
-            params["endDate"] = end_date.isoformat()
-        if account_id:
-            params["accountId"] = account_id
-        if category_id:
-            params["categoryId"] = category_id
-
-        response = self._transport.get(
-            f"{self._path}/aggregated", params=params or None
-        )
-
-        return AggregatedTransactions.model_validate(response)
+        # Fallback for wrapped response
+        return [Transaction.model_validate(item) for item in response.get("data", [])]
 
     def archive(self, transaction_id: str) -> Transaction:
         """

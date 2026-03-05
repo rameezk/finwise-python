@@ -18,7 +18,7 @@ client = FinWise()
 
 ```python
 accounts = client.accounts.list()
-for account in accounts.data:
+for account in accounts:
     print(f"{account.name}: {account.currency} {account.balance}")
 ```
 

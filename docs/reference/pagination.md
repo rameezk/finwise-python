@@ -1,6 +1,7 @@
 # Pagination
 
-All list methods return a `PaginatedResponse` object for easy iteration through results.
+!!! note "API Behavior"
+    The FinWise API does not currently support pagination for list endpoints. All `list()` methods return all available items as a simple Python list.
 
 ## Basic Usage
 
@@ -9,67 +10,44 @@ from finwise import FinWise
 
 client = FinWise(api_key="your-api-key")
 
-# Get first page
-accounts = client.accounts.list(page_number=1, page_size=50)
+# Get all accounts
+accounts = client.accounts.list()
+print(f"Found {len(accounts)} accounts")
 
-print(f"Page {accounts.page_number} of {accounts.total_pages}")
-print(f"Showing {len(accounts)} of {accounts.total_count} accounts")
-```
-
-## PaginatedResponse Properties
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `data` | `list` | Items on the current page |
-| `page_number` | `int` | Current page number (1-indexed) |
-| `page_size` | `int` | Items per page |
-| `total_count` | `int` | Total items across all pages |
-| `total_pages` | `int` | Total number of pages |
-| `has_next` | `bool` | Whether there's a next page |
-| `has_previous` | `bool` | Whether there's a previous page |
-
-## Iterating Through Items
-
-```python
-# Iterate through items on this page
-for account in accounts.data:
-    print(account.name)
-
-# Or iterate directly on the response
+# Iterate through items
 for account in accounts:
     print(account.name)
 
 # Access by index
-first_account = accounts[0]  # or accounts.data[0]
+first_account = accounts[0]
 ```
 
-## Fetching Multiple Pages
+## List Methods
+
+All list methods return a `list` of model objects:
+
+| Method | Return Type |
+|--------|-------------|
+| `accounts.list()` | `list[Account]` |
+| `transactions.list()` | `list[Transaction]` |
+| `transaction_categories.list()` | `list[TransactionCategory]` |
+| `account_balances.list()` | `list[AccountBalance]` |
+
+## Filtering
+
+While pagination is not supported, you can still filter results using available parameters:
 
 ```python
-# Check for more pages
-if accounts.has_next:
-    next_page = client.accounts.list(
-        page_number=accounts.page_number + 1,
-        page_size=50,
-    )
-```
+# Filter transactions by date range
+transactions = client.transactions.list(
+    start_date=date(2024, 1, 1),
+    end_date=date(2024, 1, 31),
+    type="expense",
+)
 
-## Iterating Through All Pages
+# Filter by account
+transactions = client.transactions.list(account_id="acc_123")
 
-```python
-page_number = 1
-all_accounts = []
-
-while True:
-    accounts = client.accounts.list(
-        page_number=page_number,
-        page_size=100
-    )
-    all_accounts.extend(accounts.data)
-
-    if not accounts.has_next:
-        break
-    page_number += 1
-
-print(f"Fetched {len(all_accounts)} accounts")
+# Filter account balances
+balances = client.account_balances.list(account_id="acc_123")
 ```

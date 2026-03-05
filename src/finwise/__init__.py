@@ -12,7 +12,7 @@ Quick Start:
     >>>
     >>> # List accounts
     >>> accounts = client.accounts.list()
-    >>> for account in accounts.data:
+    >>> for account in accounts:
     ...     print(account.name)
     >>>
     >>> # Create a transaction
@@ -74,15 +74,11 @@ from finwise.models import (
     AccountCreateRequest,
     AccountUpdateRequest,
     AggregatedBalance,
-    AggregatedTransactions,
     Transaction,
     TransactionCategory,
     TransactionCategoryCreateRequest,
     TransactionCreateRequest,
 )
-
-# Types
-from finwise.types import PaginatedResponse, PaginationParams
 
 __all__ = [
     # Version
@@ -112,11 +108,7 @@ __all__ = [
     # Models - Transaction
     "Transaction",
     "TransactionCreateRequest",
-    "AggregatedTransactions",
     # Models - Transaction Category
     "TransactionCategory",
     "TransactionCategoryCreateRequest",
-    # Types
-    "PaginatedResponse",
-    "PaginationParams",
 ]

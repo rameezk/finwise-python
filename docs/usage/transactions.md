@@ -46,22 +46,8 @@ transactions = client.transactions.list(
     type="expense",
 )
 
-for txn in transactions.data:
+for txn in transactions:
     print(f"{txn.transaction_date}: {txn.description} ({txn.amount})")
-```
-
-## Get Aggregated Summary
-
-Get totals for a date range:
-
-```python
-summary = client.transactions.aggregated(
-    start_date=date(2024, 1, 1),
-    end_date=date(2024, 1, 31),
-)
-print(f"Income: {summary.total_income}")
-print(f"Expenses: {summary.total_expenses}")
-print(f"Net: {summary.net_amount}")
 ```
 
 ## Archive a Transaction
