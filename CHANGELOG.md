@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v2.1.0 (2026-03-05)
+
+### Bug Fixes
+
+- List transactions
+  ([`6db20c6`](https://github.com/rameezk/finwise-python/commit/6db20c6646c38c8278654e200cdd43aa03d8a432))
+
+
 ## v2.0.0 (2026-03-05)
 
 ### Bug Fixes
